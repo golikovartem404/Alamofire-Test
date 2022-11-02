@@ -28,8 +28,16 @@ enum Constants {
             static let comicsItemCell = "cell"
         }
 
+        enum NavigationBarTitles {
+            static let mainViewController = "Marvel Heroes"
+        }
+
         enum ButtonsTitles {
             static let search = "Search"
+        }
+
+        enum TextFieldPlaceholders {
+            static let search = "Search a Hero"
         }
 
         enum AlertTitles {
@@ -39,6 +47,7 @@ enum Constants {
 
         enum AlertMessages {
             static let enterName = "Please enter a hero name"
+            static let loadingError = "Error while image loading"
         }
     }
 

@@ -17,7 +17,7 @@ class MainViewController: UIViewController {
 
     private lazy var searchTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Search a Hero"
+        textField.placeholder = Constants.Strings.TextFieldPlaceholders.search
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -27,6 +27,7 @@ class MainViewController: UIViewController {
     private lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Constants.Strings.ButtonsTitles.search, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 19)
         button.setTitleColor(Constants.Colors.buttonColor, for: .normal)
         button.addTarget(
             self,
@@ -76,7 +77,7 @@ class MainViewController: UIViewController {
     // MARK: - Setups
 
     private func setupNavigationBar() {
-        title = "Marvel Heroes"
+        title = Constants.Strings.NavigationBarTitles.mainViewController
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
@@ -108,7 +109,7 @@ class MainViewController: UIViewController {
     }
 
     private func callAPI() {
-        NetworkService.shared.getMarvelData { [weak self] result in
+        NetworkService.shared.fetchData(forRequestType: .common) { [weak self] result in
             switch result {
             case .success(let data):
                 self?.heroes = data.data.heroes
@@ -120,6 +121,7 @@ class MainViewController: UIViewController {
                 )
             }
         }
+
     }
 }
 
@@ -130,7 +132,7 @@ extension MainViewController {
     @objc func searchButtonPressed() {
         if let text = searchTextField.text, text != "" {
             let heroQuery = text.split(separator: " ").joined(separator: "%20")
-            NetworkService.shared.getInfoAboutMarvelHero(hero: heroQuery) { [weak self] result in
+            NetworkService.shared.fetchData(forRequestType: .hero(hero: heroQuery)) { [weak self] result in
                 switch result {
                 case .success(let data):
                     self?.heroes = data.data.heroes
@@ -175,7 +177,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(with: heroes[indexPath.row])
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -195,7 +197,7 @@ extension MainViewController: CellDelegate {
     func showErrorAlert() {
         self.showAlert(
             withTitle: Constants.Strings.AlertTitles.error,
-            andMessage: "Error while image loading"
+            andMessage: Constants.Strings.AlertMessages.loadingError
         )
     }
 }

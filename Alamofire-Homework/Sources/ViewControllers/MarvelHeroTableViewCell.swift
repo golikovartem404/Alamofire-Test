@@ -9,6 +9,8 @@ import UIKit
 
 class MarvelHeroTableViewCell: UITableViewCell {
 
+    // MARK: - Properties
+
     static let identifier = Constants.Strings.CellIdentifiers.marvelHeroCell
 
     weak var delegate: CellDelegate?
