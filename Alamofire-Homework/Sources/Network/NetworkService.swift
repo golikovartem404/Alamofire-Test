@@ -12,37 +12,39 @@ final class NetworkService {
 
     static let shared = NetworkService()
 
+    enum RequestType {
+        case common
+        case hero(hero: String)
+    }
+
     private func getHash() -> String {
         let stringForHash = Constants.Keys.tsString + Constants.Keys.privateKey + Constants.Keys.publicKey
         return stringForHash.md5()
     }
 
-    func getMarvelData(completion: @escaping(Result<Characters, Error>) -> ()) {
-        AF.request("\(Constants.URL.marvelURL)?ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())")
-          .validate()
-          .responseDecodable(of: Characters.self) { (response) in
-            guard let data = response.value else {
-                if let error = response.error {
-                    completion(.failure(error))
-                }
-                return
-            }
-              completion(.success(data))
-          }
+    func fetchData(forRequestType type: RequestType, completion: @escaping (Result<Characters, Error>) -> ()) {
+        var urlString = String()
+        switch type {
+        case .common:
+            urlString = "\(Constants.URL.marvelURL)?ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())"
+        case .hero(let hero):
+            urlString = "\(Constants.URL.marvelURL)?name=\(hero)&ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())"
+        }
+        getMarvelData(forURL: urlString, completion: completion)
     }
 
-    func getInfoAboutMarvelHero(hero: String, completion: @escaping(Result<Characters, Error>) -> ()) {
-        AF.request("\(Constants.URL.marvelURL)?name=\(hero)&ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())")
-          .validate()
-          .responseDecodable(of: Characters.self) { (response) in
-            guard let data = response.value else {
-                if let error = response.error {
-                    completion(.failure(error))
+    func getMarvelData(forURL url: String, completion: @escaping (Result<Characters, Error>) -> ()) {
+        AF.request(url)
+            .validate()
+            .responseDecodable(of: Characters.self) { (response) in
+                guard let data = response.value else {
+                    if let error = response.error {
+                        completion(.failure(error))
+                    }
+                    return
                 }
-                return
+                completion(.success(data))
             }
-              completion(.success(data))
-          }
     }
 
     func getImage(fromURL url: String, completion: @escaping(Result<Data, Error>) -> ()) {
