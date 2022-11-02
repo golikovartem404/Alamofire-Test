@@ -12,20 +12,13 @@ final class NetworkService {
 
     static let shared = NetworkService()
 
-    enum Constants {
-        static let marvelURL = "https://gateway.marvel.com/v1/public/characters"
-        static let privateKey = "46f8f85beb801c6c7484e6765ad8cc8fd95ba183"
-        static let publicKey = "54ff82072c31c40d4ff3725f132e540d"
-        static let ts = "1"
-    }
-
     private func getHash() -> String {
-        let stringForHash = Constants.ts + Constants.privateKey + Constants.publicKey
+        let stringForHash = Constants.Keys.tsString + Constants.Keys.privateKey + Constants.Keys.publicKey
         return stringForHash.md5()
     }
 
     func getMarvelData(completion: @escaping(Result<Characters, Error>) -> ()) {
-        AF.request("\(Constants.marvelURL)?ts=\(Constants.ts)&apikey=\(Constants.publicKey)&hash=\(getHash())")
+        AF.request("\(Constants.URL.marvelURL)?ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())")
           .validate()
           .responseDecodable(of: Characters.self) { (response) in
             guard let data = response.value else {
@@ -39,7 +32,7 @@ final class NetworkService {
     }
 
     func getInfoAboutMarvelHero(hero: String, completion: @escaping(Result<Characters, Error>) -> ()) {
-        AF.request("\(Constants.marvelURL)?name=\(hero)&ts=\(Constants.ts)&apikey=\(Constants.publicKey)&hash=\(getHash())")
+        AF.request("\(Constants.URL.marvelURL)?name=\(hero)&ts=\(Constants.Keys.tsString)&apikey=\(Constants.Keys.publicKey)&hash=\(getHash())")
           .validate()
           .responseDecodable(of: Characters.self) { (response) in
             guard let data = response.value else {

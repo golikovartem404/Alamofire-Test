@@ -26,8 +26,8 @@ class MainViewController: UIViewController {
 
     private lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Search", for: .normal)
-        button.setTitleColor(UIColor.systemGray3, for: .normal)
+        button.setTitle(Constants.Strings.ButtonsTitles.search, for: .normal)
+        button.setTitleColor(Constants.Colors.buttonColor, for: .normal)
         button.addTarget(
             self,
             action: #selector(searchButtonPressed),
@@ -40,7 +40,7 @@ class MainViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
-        button.tintColor = .systemGray3
+        button.tintColor = Constants.Colors.buttonColor
         button.addTarget(
             self,
             action: #selector(cancelButtonPressed),
@@ -67,14 +67,18 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        setupNavigationBar()
         setupHierarchy()
         setupLayout()
         callAPI()
-        title = "Marvel Heroes"
-        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     // MARK: - Setups
+
+    private func setupNavigationBar() {
+        title = "Marvel Heroes"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
 
     private func setupHierarchy() {
         view.addSubview(searchTextField)
@@ -104,14 +108,14 @@ class MainViewController: UIViewController {
     }
 
     private func callAPI() {
-        NetworkService.shared.getMarvelData { result in
+        NetworkService.shared.getMarvelData { [weak self] result in
             switch result {
             case .success(let data):
-                self.heroes = data.data.heroes
-                self.marvelHeroesTable.reloadData()
+                self?.heroes = data.data.heroes
+                self?.marvelHeroesTable.reloadData()
             case .failure(let error):
-                self.showAlert(
-                    withTitle: "Error",
+                self?.showAlert(
+                    withTitle: Constants.Strings.AlertTitles.error,
                     andMessage: error.localizedDescription
                 )
             }
@@ -126,23 +130,23 @@ extension MainViewController {
     @objc func searchButtonPressed() {
         if let text = searchTextField.text, text != "" {
             let heroQuery = text.split(separator: " ").joined(separator: "%20")
-            NetworkService.shared.getInfoAboutMarvelHero(hero: heroQuery) { result in
+            NetworkService.shared.getInfoAboutMarvelHero(hero: heroQuery) { [weak self] result in
                 switch result {
                 case .success(let data):
-                    self.heroes = data.data.heroes
-                    self.marvelHeroesTable.reloadData()
+                    self?.heroes = data.data.heroes
+                    self?.marvelHeroesTable.reloadData()
                 case .failure(let error):
                     print(error)
-                    self.showAlert(
-                        withTitle: "Error",
+                    self?.showAlert(
+                        withTitle: Constants.Strings.AlertTitles.error,
                         andMessage: error.localizedDescription
                     )
                 }
             }
         } else {
             self.showAlert(
-                withTitle: "Warning",
-                andMessage: "Please enter hero name"
+                withTitle: Constants.Strings.AlertTitles.warning,
+                andMessage: Constants.Strings.AlertMessages.enterName
             )
         }
     }
@@ -181,5 +185,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let viewCont = DetailedViewController()
         viewCont.configureWith(model: heroes[indexPath.row])
         present(viewCont, animated: true)
+    }
+}
+
+// MARK: - Cell Delegate Extension
+
+extension MainViewController: CellDelegate {
+
+    func showErrorAlert() {
+        self.showAlert(
+            withTitle: Constants.Strings.AlertTitles.error,
+            andMessage: "Error while image loading"
+        )
     }
 }

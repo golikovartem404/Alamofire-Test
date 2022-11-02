@@ -9,7 +9,9 @@ import UIKit
 
 class MarvelHeroTableViewCell: UITableViewCell {
 
-    static let identifier = "MarvelTableViewCell"
+    static let identifier = Constants.Strings.CellIdentifiers.marvelHeroCell
+
+    weak var delegate: CellDelegate?
 
     // MARK: - Outlets
 
@@ -85,17 +87,15 @@ class MarvelHeroTableViewCell: UITableViewCell {
         if let data = model.imageData {
             marvelImageView.image = UIImage(data: data)
         } else {
-            NetworkService.shared.getImage(fromURL: url) { result in
+            NetworkService.shared.getImage(fromURL: url) { [weak self] result in
                 switch result {
                 case .success(let data):
                     model.imageData = data
                     DispatchQueue.main.async {
-                        self.marvelImageView.image = UIImage(data: data)
+                        self?.marvelImageView.image = UIImage(data: data)
                     }
                 case .failure(_):
-                    DispatchQueue.main.async {
-                        self.marvelImageView.image = UIImage(systemName: "house")
-                    }
+                    self?.delegate?.showErrorAlert()
                 }
             }
         }
