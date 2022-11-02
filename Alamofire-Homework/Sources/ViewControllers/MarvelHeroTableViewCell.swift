@@ -22,7 +22,6 @@ class MarvelHeroTableViewCell: UITableViewCell {
 
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -30,14 +29,12 @@ class MarvelHeroTableViewCell: UITableViewCell {
 
     lazy var symbolLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .black
         setupHierarchy()
         setupLayout()
     }
