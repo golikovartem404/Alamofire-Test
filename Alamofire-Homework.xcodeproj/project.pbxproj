@@ -18,6 +18,8 @@
 		9C2C824229127D6400D19574 /* String + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824129127D6400D19574 /* String + Ext.swift */; };
 		9C2C824429127D6F00D19574 /* UIViewController + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */; };
 		9C2C824629127E4000D19574 /* DatailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824529127E4000D19574 /* DatailedViewController.swift */; };
+		9C2C824929128A8C00D19574 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824829128A8C00D19574 /* Constants.swift */; };
+		9C2C824C2912910400D19574 /* CellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824B2912910400D19574 /* CellDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		9C2C824129127D6400D19574 /* String + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ext.swift"; sourceTree = "<group>"; };
 		9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Ext.swift"; sourceTree = "<group>"; };
 		9C2C824529127E4000D19574 /* DatailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatailedViewController.swift; sourceTree = "<group>"; };
+		9C2C824829128A8C00D19574 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9C2C824B2912910400D19574 /* CellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +88,8 @@
 		9C2C82312912703B00D19574 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9C2C824A291290F900D19574 /* Protocols */,
+				9C2C824729128A7B00D19574 /* Constants */,
 				9C2C824029127D5A00D19574 /* Extensions */,
 				9C2C82352912706C00D19574 /* App */,
 				9C2C82342912704D00D19574 /* Network */,
@@ -135,6 +141,22 @@
 				9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9C2C824729128A7B00D19574 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				9C2C824829128A8C00D19574 /* Constants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		9C2C824A291290F900D19574 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				9C2C824B2912910400D19574 /* CellDelegate.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,10 +239,12 @@
 				9C2C821D29126F7500D19574 /* AppDelegate.swift in Sources */,
 				9C2C821F29126F7500D19574 /* SceneDelegate.swift in Sources */,
 				9C2C823A2912720E00D19574 /* NetworkService.swift in Sources */,
+				9C2C824929128A8C00D19574 /* Constants.swift in Sources */,
 				9C2C824229127D6400D19574 /* String + Ext.swift in Sources */,
 				9C2C823F29127C9C00D19574 /* MarvelHeroTableViewCell.swift in Sources */,
 				9C2C824629127E4000D19574 /* DatailedViewController.swift in Sources */,
 				9C2C823C29127BC400D19574 /* Characters.swift in Sources */,
+				9C2C824C2912910400D19574 /* CellDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

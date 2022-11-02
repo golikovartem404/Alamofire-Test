@@ -41,7 +41,7 @@ class DetailedViewController: UIViewController {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(
             UITableViewCell.self,
-            forCellReuseIdentifier: "cell"
+            forCellReuseIdentifier: Constants.Strings.CellIdentifiers.comicsItemCell
         )
         table.dataSource = self
         table.delegate = self
@@ -92,14 +92,14 @@ class DetailedViewController: UIViewController {
         namelabel.text = model.name
         self.comics = model.comics.items
         let url = model.thumbnail.path + "." + model.thumbnail.thumbnailExtension
-        NetworkService.shared.getImage(fromURL: url) { result in
+        NetworkService.shared.getImage(fromURL: url) { [weak self] result in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
-                    self.imageView.image = UIImage(data: data)
+                    self?.imageView.image = UIImage(data: data)
                 }
             case .failure(let error):
-                self.showAlert(
+                self?.showAlert(
                     withTitle: "Error",
                     andMessage: error.localizedDescription
                 )
@@ -117,7 +117,7 @@ extension DetailedViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.Strings.CellIdentifiers.comicsItemCell, for: indexPath)
         cell.textLabel?.text = comics[indexPath.row].name
         return cell
     }
