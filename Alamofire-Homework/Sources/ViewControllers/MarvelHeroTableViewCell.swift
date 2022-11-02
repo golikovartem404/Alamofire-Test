@@ -6,13 +6,14 @@
 //
 
 import UIKit
-import Alamofire
 
 class MarvelHeroTableViewCell: UITableViewCell {
 
     static let identifier = "MarvelTableViewCell"
 
-    lazy var marvelImageView: UIImageView = {
+    // MARK: - Outlets
+
+    private lazy var marvelImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
@@ -20,18 +21,20 @@ class MarvelHeroTableViewCell: UITableViewCell {
         return imageView
     }()
 
-    lazy var nameLabel: UILabel = {
+    private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    lazy var symbolLabel: UILabel = {
+    private lazy var symbolLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
+    // MARK: - Lifecycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -43,13 +46,15 @@ class MarvelHeroTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupHierarchy() {
+    // MARK: - Setups
+
+    private func setupHierarchy() {
         addSubview(marvelImageView)
         addSubview(nameLabel)
         addSubview(symbolLabel)
     }
 
-    func setupLayout() {
+    private func setupLayout() {
         NSLayoutConstraint.activate([
             marvelImageView.topAnchor.constraint(equalTo: self.topAnchor),
             marvelImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -75,22 +80,24 @@ class MarvelHeroTableViewCell: UITableViewCell {
 
     func configure(with model: Hero) {
         nameLabel.text = model.name
-        symbolLabel.text = "Number os comics: \(model.comics.items.count)"
+        symbolLabel.text = "Number of comics: \(model.comics.items.count)"
         let url = model.thumbnail.path + "." + model.thumbnail.thumbnailExtension
         if let data = model.imageData {
             marvelImageView.image = UIImage(data: data)
-        } else if let marvelURL = URL(string: url) {
-            AF.request(marvelURL)
-                .validate()
-                .responseDecodable(of: Data.self) { response in
-                    if let data = response.data {
-                        model.imageData = data
-                        DispatchQueue.main.async {
-                            self.marvelImageView.image = UIImage(data: data)
-                        }
+        } else {
+            NetworkService.shared.getImage(fromURL: url) { result in
+                switch result {
+                case .success(let data):
+                    model.imageData = data
+                    DispatchQueue.main.async {
+                        self.marvelImageView.image = UIImage(data: data)
+                    }
+                case .failure(_):
+                    DispatchQueue.main.async {
+                        self.marvelImageView.image = UIImage(systemName: "house")
                     }
                 }
+            }
         }
     }
-
 }

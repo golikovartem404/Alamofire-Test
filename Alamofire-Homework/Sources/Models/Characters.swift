@@ -11,7 +11,6 @@ struct Characters: Codable {
     let data: Character
 }
 
-// MARK: - DataClass
 struct Character: Codable {
     let count: Int
     let heroes: [Hero]
@@ -44,7 +43,6 @@ struct Comics: Codable {
     let items: [ComicsItem]
 }
 
-// MARK: - ComicsItem
 struct ComicsItem: Codable {
     let name: String
 }

@@ -6,11 +6,14 @@
 //
 
 import UIKit
-import Alamofire
 
 class DetailedViewController: UIViewController {
 
+    // MARK: - Properties
+
     private var comics: [ComicsItem] = []
+
+    // MARK: - Outlets
 
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -36,12 +39,17 @@ class DetailedViewController: UIViewController {
 
     private lazy var comicsTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: "cell"
+        )
         table.dataSource = self
         table.delegate = self
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,14 +58,16 @@ class DetailedViewController: UIViewController {
         setupLayout()
     }
 
-    func setupHierarchy() {
+    // MARK: - Setups
+
+    private func setupHierarchy() {
         view.addSubview(imageView)
         view.addSubview(namelabel)
         view.addSubview(comicsLabel)
         view.addSubview(comicsTable)
     }
 
-    func setupLayout() {
+    private func setupLayout() {
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
@@ -82,17 +92,23 @@ class DetailedViewController: UIViewController {
         namelabel.text = model.name
         self.comics = model.comics.items
         let url = model.thumbnail.path + "." + model.thumbnail.thumbnailExtension
-        AF.request(url)
-            .validate()
-            .responseDecodable(of: Data.self) { response in
-                if let data = response.data {
-                    DispatchQueue.main.async {
-                        self.imageView.image = UIImage(data: data)
-                    }
+        NetworkService.shared.getImage(fromURL: url) { result in
+            switch result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self.imageView.image = UIImage(data: data)
                 }
+            case .failure(let error):
+                self.showAlert(
+                    withTitle: "Error",
+                    andMessage: error.localizedDescription
+                )
             }
+        }
     }
 }
+
+// MARK: - UITableView Extension
 
 extension DetailedViewController: UITableViewDataSource, UITableViewDelegate {
 
