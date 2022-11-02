@@ -9,11 +9,14 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    // MARK: - Properties
+
     private var heroes: [Hero] = []
+
+    // MARK: - Outlets
 
     private lazy var searchTextField: UITextField = {
         let textField = UITextField()
-//        textField.borderStyle = .roundedRect
         textField.placeholder = "Search a Hero"
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
@@ -25,7 +28,11 @@ class MainViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("Search", for: .normal)
         button.setTitleColor(UIColor.systemGray3, for: .normal)
-        button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(searchButtonPressed),
+            for: .touchUpInside
+        )
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -34,19 +41,28 @@ class MainViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
         button.tintColor = .systemGray3
-        button.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(cancelButtonPressed),
+            for: .touchUpInside
+        )
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
     private lazy var marvelHeroesTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
-        table.register(MarvelHeroTableViewCell.self, forCellReuseIdentifier: MarvelHeroTableViewCell.identifier)
+        table.register(
+            MarvelHeroTableViewCell.self,
+            forCellReuseIdentifier: MarvelHeroTableViewCell.identifier
+        )
         table.dataSource = self
         table.delegate = self
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,14 +74,16 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
-    func setupHierarchy() {
+    // MARK: - Setups
+
+    private func setupHierarchy() {
         view.addSubview(searchTextField)
         view.addSubview(searchButton)
         view.addSubview(cancelButton)
         view.addSubview(marvelHeroesTable)
     }
 
-    func setupLayout() {
+    private func setupLayout() {
         NSLayoutConstraint.activate([
             searchTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
             searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -85,42 +103,62 @@ class MainViewController: UIViewController {
         ])
     }
 
-    func callAPI() {
-        APICaller.shared.getMarvelData { result in
+    private func callAPI() {
+        NetworkService.shared.getMarvelData { result in
             switch result {
             case .success(let data):
                 self.heroes = data.data.heroes
                 self.marvelHeroesTable.reloadData()
             case .failure(let error):
-                self.showAlert(withTitle: "Error", andMessage: error.localizedDescription)
+                self.showAlert(
+                    withTitle: "Error",
+                    andMessage: error.localizedDescription
+                )
             }
         }
     }
+}
+
+// MARK: - Actions for buttons Extension
+
+extension MainViewController {
 
     @objc func searchButtonPressed() {
         if let text = searchTextField.text, text != "" {
             let heroQuery = text.split(separator: " ").joined(separator: "%20")
-            APICaller.shared.getInfoAboutMarvelHero(hero: heroQuery) { result in
+            NetworkService.shared.getInfoAboutMarvelHero(hero: heroQuery) { result in
                 switch result {
                 case .success(let data):
                     self.heroes = data.data.heroes
                     self.marvelHeroesTable.reloadData()
                 case .failure(let error):
                     print(error)
-                    self.showAlert(withTitle: "Error", andMessage: error.localizedDescription)
+                    self.showAlert(
+                        withTitle: "Error",
+                        andMessage: error.localizedDescription
+                    )
                 }
             }
         } else {
-            self.showAlert(withTitle: "Warning", andMessage: "Please enter hero name")
+            self.showAlert(
+                withTitle: "Warning",
+                andMessage: "Please enter hero name"
+            )
         }
     }
 
     @objc func cancelButtonPressed() {
-        searchTextField.text = ""
-        searchTextField.endEditing(true)
-        callAPI()
+        if searchTextField.text != "" {
+            searchTextField.text = ""
+            searchTextField.endEditing(true)
+            callAPI()
+        } else {
+            searchTextField.endEditing(true)
+        }
     }
 }
+
+// MARK: - UITableView Extension
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
