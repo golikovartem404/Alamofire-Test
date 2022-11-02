@@ -11,6 +11,35 @@ class MainViewController: UIViewController {
 
     private var heroes: [Hero] = []
 
+    private lazy var searchTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "Search a Hero"
+        textField.backgroundColor = .black
+        textField.layer.cornerRadius = 8
+        textField.layer.masksToBounds = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+
+    private lazy var searchButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Search", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private lazy var cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
     private lazy var marvelHeroesTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(MarvelHeroTableViewCell.self, forCellReuseIdentifier: MarvelHeroTableViewCell.identifier)
@@ -30,12 +59,27 @@ class MainViewController: UIViewController {
     }
 
     func setupHierarchy() {
+        view.addSubview(searchTextField)
+        view.addSubview(searchButton)
+        view.addSubview(cancelButton)
         view.addSubview(marvelHeroesTable)
     }
 
     func setupLayout() {
         NSLayoutConstraint.activate([
-            marvelHeroesTable.topAnchor.constraint(equalTo: view.topAnchor),
+
+            searchTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            searchTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -30),
+            searchTextField.heightAnchor.constraint(equalToConstant: 40),
+
+            searchButton.centerYAnchor.constraint(equalTo: searchTextField.centerYAnchor),
+            searchButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -25),
+
+            cancelButton.centerYAnchor.constraint(equalTo: searchTextField.centerYAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+
+            marvelHeroesTable.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 30),
             marvelHeroesTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             marvelHeroesTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             marvelHeroesTable.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -54,7 +98,14 @@ class MainViewController: UIViewController {
         }
     }
 
+    @objc func searchButtonPressed() {
 
+    }
+
+    @objc func cancelButtonPressed() {
+        searchTextField.text = ""
+        callAPI()
+    }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
