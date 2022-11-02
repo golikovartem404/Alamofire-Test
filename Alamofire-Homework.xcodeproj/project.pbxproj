@@ -14,6 +14,9 @@
 		9C2C8238291270D400D19574 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9C2C8237291270D400D19574 /* Alamofire */; };
 		9C2C823A2912720E00D19574 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C82392912720E00D19574 /* APICaller.swift */; };
 		9C2C823C29127BC400D19574 /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C823B29127BC400D19574 /* Characters.swift */; };
+		9C2C823F29127C9C00D19574 /* MarvelHeroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C823E29127C9C00D19574 /* MarvelHeroTableViewCell.swift */; };
+		9C2C824229127D6400D19574 /* String + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824129127D6400D19574 /* String + Ext.swift */; };
+		9C2C824429127D6F00D19574 /* UIViewController + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,9 @@
 		9C2C822A29126F7500D19574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C2C82392912720E00D19574 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		9C2C823B29127BC400D19574 /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
+		9C2C823E29127C9C00D19574 /* MarvelHeroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelHeroTableViewCell.swift; sourceTree = "<group>"; };
+		9C2C824129127D6400D19574 /* String + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ext.swift"; sourceTree = "<group>"; };
+		9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +82,7 @@
 		9C2C82312912703B00D19574 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9C2C824029127D5A00D19574 /* Extensions */,
 				9C2C82352912706C00D19574 /* App */,
 				9C2C82342912704D00D19574 /* APICaller */,
 				9C2C82332912704600D19574 /* Models */,
@@ -88,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				9C2C822029126F7500D19574 /* MainViewController.swift */,
+				9C2C823E29127C9C00D19574 /* MarvelHeroTableViewCell.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -115,6 +123,15 @@
 				9C2C821E29126F7500D19574 /* SceneDelegate.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		9C2C824029127D5A00D19574 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9C2C824129127D6400D19574 /* String + Ext.swift */,
+				9C2C824329127D6F00D19574 /* UIViewController + Ext.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,10 +209,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C2C824429127D6F00D19574 /* UIViewController + Ext.swift in Sources */,
 				9C2C822129126F7500D19574 /* MainViewController.swift in Sources */,
 				9C2C821D29126F7500D19574 /* AppDelegate.swift in Sources */,
 				9C2C821F29126F7500D19574 /* SceneDelegate.swift in Sources */,
 				9C2C823A2912720E00D19574 /* APICaller.swift in Sources */,
+				9C2C824229127D6400D19574 /* String + Ext.swift in Sources */,
+				9C2C823F29127C9C00D19574 /* MarvelHeroTableViewCell.swift in Sources */,
 				9C2C823C29127BC400D19574 /* Characters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
