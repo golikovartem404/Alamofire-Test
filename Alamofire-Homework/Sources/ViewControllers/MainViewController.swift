@@ -13,9 +13,8 @@ class MainViewController: UIViewController {
 
     private lazy var searchTextField: UITextField = {
         let textField = UITextField()
-        textField.borderStyle = .roundedRect
+//        textField.borderStyle = .roundedRect
         textField.placeholder = "Search a Hero"
-        textField.backgroundColor = .black
         textField.layer.cornerRadius = 8
         textField.layer.masksToBounds = true
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +24,7 @@ class MainViewController: UIViewController {
     private lazy var searchButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Search", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(UIColor.systemGray3, for: .normal)
         button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -34,7 +33,7 @@ class MainViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
-        button.tintColor = .white
+        button.tintColor = .systemGray3
         button.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -51,6 +50,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setupHierarchy()
         setupLayout()
         callAPI()
@@ -67,7 +67,6 @@ class MainViewController: UIViewController {
 
     func setupLayout() {
         NSLayoutConstraint.activate([
-
             searchTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
             searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -30),
@@ -99,11 +98,26 @@ class MainViewController: UIViewController {
     }
 
     @objc func searchButtonPressed() {
-
+        if let text = searchTextField.text, text != "" {
+            let heroQuery = text.split(separator: " ").joined(separator: "%20")
+            APICaller.shared.getInfoAboutMarvelHero(hero: heroQuery) { result in
+                switch result {
+                case .success(let data):
+                    self.heroes = data.data.heroes
+                    self.marvelHeroesTable.reloadData()
+                case .failure(let error):
+                    print(error)
+                    self.showAlert(withTitle: "Error", andMessage: error.localizedDescription)
+                }
+            }
+        } else {
+            self.showAlert(withTitle: "Warning", andMessage: "Please enter hero name")
+        }
     }
 
     @objc func cancelButtonPressed() {
         searchTextField.text = ""
+        searchTextField.endEditing(true)
         callAPI()
     }
 }

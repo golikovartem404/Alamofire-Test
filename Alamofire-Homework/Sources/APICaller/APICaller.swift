@@ -31,4 +31,18 @@ final class APICaller {
               completion(.success(data))
           }
     }
+
+    func getInfoAboutMarvelHero(hero: String, completion: @escaping(Result<Characters, Error>) -> ()) {
+        AF.request("https://gateway.marvel.com/v1/public/characters?name=\(hero)&ts=1&apikey=54ff82072c31c40d4ff3725f132e540d&hash=cd7ccc0bc05ba33e0673b0c19849f49d")
+          .validate()
+          .responseDecodable(of: Characters.self) { (response) in
+            guard let data = response.value else {
+                if let error = response.error {
+                    completion(.failure(error))
+                }
+                return
+            }
+              completion(.success(data))
+          }
+    }
 }
